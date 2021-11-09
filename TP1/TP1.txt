@@ -1,0 +1,26 @@
+CHRISTOFOROU Anthony
+
+TP1: Systeme Informatique
+
+Exercice 2
+La commande echo sert a afficher un ligne de texte sur la sortie standard.
+Les parametres de cette commandes sont echo [option] [texte]
+
+Exercice 2.3
+Pour creer un fichier vide on peut utiliser la commande 'touch' suivie par une option et le nom du fichier.
+
+Exercice 2.4
+On peut utiliser --help ainsi que voir la page man des programme a partir du terminal.
+
+Exercice 2.5
+a) Les trois commandes renvoient le nombre de mots dans le fichier foo.txt, juste de maniere differentes:
+- La premiere commande redirige foo.txt sur le flux d'entree standard et affiche sur la sortie standard le nombre de mots
+- La deuxieme commande va afficher foo.txt mais rediriger la sortie vers la commande avec le pipe wc qui va compter le nombre de mots et l'afficher cette fois si sur la sortie standard
+- Finalement, la derniere commande va lire le nombre de mots directement depuis le fichier et l'afficher sur la sortie standard. Elle donne aussi le nom du fichier lu.
+
+b) La commande head va afficher les 6 premieres lignes du fichier alors que la commande tail va afficher les 6 dernieres lignes du fichier.
+
+c)  out1.txt et ou2.txt sont different. En effet, out1.txt et vide apres cette operation que foo.txt exite ou non. out2.txt comparer a lui aura le contenue de foo.txt quand il existe trie par ligne.
+
+Exercice 2.6
+cf Script1.sh

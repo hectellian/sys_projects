@@ -1,0 +1,7 @@
+CHRISTOFOROU 
+ANTHONY
+            TP3
+
+La premiere chose a faire dans ce tp est de traverser un dossier de maniere recursive pour copier son contenu. 
+Il arrive certaines fois que l'on ne puisse pas copier un fichier avec les memes droits si ils ont des droits plus
+elevees que l'user qui lance notre programme.
