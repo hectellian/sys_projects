@@ -18,7 +18,6 @@ int main(int argc, char* argv[]) {
         char* EXIT_PROG = "exit\n";
         char* HELP = "?\n";
 
-
         int fd = open(argv[1], O_RDWR);
         if (fd < 0) {
             fprintf(stderr, "Couldn't open file %s: %s\n", argv[1], strerror(errno));

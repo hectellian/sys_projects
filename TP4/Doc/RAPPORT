@@ -1,0 +1,18 @@
+CHRISTOFOROU
+ANTHONY
+
+# RAPPORT
+
+## Variables
+
+Notre but pour ce TP etait de creer un programme qui pose des verrous de maniere interactive
+pour l'utilisateur. On commence par initialiser toutes les varibales que l'on va utilisater 
+tout le long du programme. On a tout d'abord input qui va etre la varibale qui va recevoir 
+toute l'entree tapee par l'utilisateur sans formatage. On utilisera plus tard la fonction `sscanf`
+pour parser l'entree. On initialise input_w a 's' pour qu'on est une valeur par defaut plus tard.
+Finalement, EXIT_PROG et HELP sont ce qui va nous permettre de quitter le programme ou demander de l'aide.
+
+## Input
+
+La premiere chose a faire va etre de creer un descriptif du fichier que l'on veut utiliser.
+Pour cela on utilise la fonction `open(char* filepath, )`
