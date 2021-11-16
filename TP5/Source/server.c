@@ -72,83 +72,85 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Init client address
-    accept:printf("> ");
-    struct sockaddr_in clientAddress; //Client address struct
-    unsigned int clientLength = sizeof(clientAddress); // Getting the length of a client address
-    // Accepting connection
-    int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientLength);
+    for(;;) {
+        // Init client address
+        struct sockaddr_in clientAddress; //Client address struct
+        unsigned int clientLength = sizeof(clientAddress); // Getting the length of a client address
+        // Accepting connection
+        int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddress, &clientLength);
 
-    printf("Client %d with address %s:%d is connected\n", clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port));
+        printf("Client %d with address %s:%d is connected\n", clientSocket, inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port));
+        // Creating new process for every new connection
+        pid_t pid = fork();
+        if (pid > 0) { // Parents PID
+            // Parents code
+            waitpid(pid, NULL, 0); // Kill child :)
+        } else if (pid == 0) { // Child's PID
+            // Child's code
+            // We don't want any zombie process so we make a new process
+            pid_t pidS = fork();
+            if (pidS > 0) {
+                printf("here");
+                exit(EXIT_SUCCESS);
+            }
+            if (pidS == 0) {
+                // First communication
+                // Writing min and max
+                write(clientSocket, &min, sizeof(min));
+                write(clientSocket, &max, sizeof(max));
 
-    // Creating new process for every new connection
-    pid_t pid = fork();
-    if (pid > 0) { // Parents PID
-        // Parent's code
-        close(clientSocket);
-        goto accept; // Accepting new connection
-    } else if (pid == 0) { // Child's PID
-        // Child's code
-        // We don't want any zombie process so we make a new process
-        pid_t pidS = fork();
-        if (pidS == 0) {
-            // First communication
-            // Writing min and max
-            write(clientSocket, &min, sizeof(min));
-            write(clientSocket, &max, sizeof(max));
+                unsigned char random_value = random_number(min, max);
+                printf("Random value generated for client %d: %u\n", clientSocket, random_value);
 
-            unsigned char random_value = random_number(min, max);
-            printf("Random value generated for client %d: %u\n", clientSocket, random_value);
+            unsigned char tries = 0;
+                unsigned char left = MAX_TRIES;
+                unsigned char cmd;
+                for (;;) { // Checking for clients guesses
+                    unsigned char input;
+                    read(clientSocket, NULL, 1);
+                    read(clientSocket, &input, sizeof(input));
+                    printf("Client %d guessed %u\n", clientSocket, input);
 
-        unsigned char tries = 0;
-            unsigned char left = MAX_TRIES;
-            unsigned char cmd;
-            for (;;) { // Checking for clients guesses
-                unsigned char input;
-                read(clientSocket, NULL, 1);
-                read(clientSocket, &input, sizeof(input));
-                printf("Client %d guessed %u\n", clientSocket, input);
-
-                // If client makes too much tries
-                if (tries >= MAX_TRIES) {
-                    cmd = LOSE; // LOSE command
-                    // Send info to client
-                    write(clientSocket, &cmd, sizeof(cmd)); // Command
-                    write(clientSocket, &random_value, sizeof(random_value)); // Right Value
-                    write(clientSocket, &left, sizeof(left)); // Left tries
-                    printf("Client %d lost\n", clientSocket);
-                    exit(EXIT_SUCCESS);
-                }
-                // If client guesses right
-                if (input == random_value) {
-                    cmd = WIN;
-                    // Sending info to client
-                    write(clientSocket, &cmd, sizeof(cmd));
-                    write(clientSocket, &random_value, sizeof(random_value));
-                    write(clientSocket, &left, sizeof(left));
-                    // Client wins
-                    printf("Client %d wins\n", clientSocket);
-                    exit(EXIT_SUCCESS);
-                } else {
-                    tries++; // Incrementing tries
-                    left = MAX_TRIES - tries;
-                    if (input < random_value) {
-                        cmd = TOO_LOW;
+                    // If client makes too much tries
+                    if (tries >= MAX_TRIES) {
+                        cmd = LOSE; // LOSE command
+                        // Send info to client
+                        write(clientSocket, &cmd, sizeof(cmd)); // Command
+                        write(clientSocket, &random_value, sizeof(random_value)); // Right Value
+                        write(clientSocket, &left, sizeof(left)); // Left tries
+                        printf("Client %d lost\n", clientSocket);
+                        exit(EXIT_SUCCESS);
+                    }
+                    // If client guesses right
+                    if (input == random_value) {
+                        cmd = WIN;
+                        // Sending info to client
                         write(clientSocket, &cmd, sizeof(cmd));
                         write(clientSocket, &random_value, sizeof(random_value));
                         write(clientSocket, &left, sizeof(left));
+                        // Client wins
+                        printf("Client %d wins\n", clientSocket);
+                        exit(EXIT_SUCCESS);
                     } else {
-                        cmd = TOO_HIGH;
-                        write(clientSocket, &cmd, sizeof(cmd));
-                        write(clientSocket, &random_value, sizeof(random_value));
-                        write(clientSocket, &left, sizeof(left));
+                        tries++; // Incrementing tries
+                        left = MAX_TRIES - tries;
+                        if (input < random_value) {
+                            cmd = TOO_LOW;
+                            write(clientSocket, &cmd, sizeof(cmd));
+                            write(clientSocket, &random_value, sizeof(random_value));
+                            write(clientSocket, &left, sizeof(left));
+                        } else {
+                            cmd = TOO_HIGH;
+                            write(clientSocket, &cmd, sizeof(cmd));
+                            write(clientSocket, &random_value, sizeof(random_value));
+                            write(clientSocket, &left, sizeof(left));
+                        }
                     }
                 }
             }
+        } else {
+            fprintf(stderr, "Couldn't create process: %s", strerror(errno));
         }
-        waitpid(-1, NULL, 0); // Kill child :)
-    } else {
-        fprintf(stderr, "Couldn't create process: %s", strerror(errno));
     }
     return 0;
 }
