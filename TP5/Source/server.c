@@ -90,12 +90,12 @@ int main(int argc, char* argv[]) {
             // We don't want any zombie process so we make a new process
             pid_t pidS = fork();
             if (pidS > 0) {
-                printf("here");
                 exit(EXIT_SUCCESS);
             }
             if (pidS == 0) {
                 // First communication
                 // Writing min and max
+                write(clientSocket, NULL, 1);
                 write(clientSocket, &min, sizeof(min));
                 write(clientSocket, &max, sizeof(max));
 
@@ -107,6 +107,7 @@ int main(int argc, char* argv[]) {
                 unsigned char cmd;
                 for (;;) { // Checking for clients guesses
                     unsigned char input;
+                    read(clientSocket, NULL, 1);
                     read(clientSocket, NULL, 1);
                     read(clientSocket, &input, sizeof(input));
                     printf("Client %d guessed %u\n", clientSocket, input);

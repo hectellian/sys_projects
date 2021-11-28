@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
     // First communication
     // Reading initial values min and max
     unsigned char min, max;
+    read(clientSocket, NULL, 1);
     read(clientSocket, &min, sizeof(min));
     read(clientSocket, &max, sizeof(max));
     printf("Guess range is between %u and %u\n", min, max);
@@ -61,6 +62,7 @@ int main(int argc, char* argv[]) {
         unsigned char input = (unsigned char) i;
         //printf("%d\n", input);
         // Writing input
+        write(clientSocket, NULL, 1);
         write(clientSocket, NULL, 1);
         write(clientSocket, &input, sizeof(input));
 
