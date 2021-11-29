@@ -15,6 +15,11 @@
 #define LOSE 4
 
 int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        fprintf(stderr, "Not enough arguments");
+        exit(EXIT_FAILURE);
+    }
+
     struct sockaddr_in address; // Client address struct
 
     char *ip = argv[1];

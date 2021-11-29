@@ -29,6 +29,11 @@ unsigned char random_number(unsigned char min, unsigned char max) {
 }
 
 int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Not enough arguments\n");
+        exit(EXIT_FAILURE);
+    }
+
     struct sockaddr_in address; // Server address struct
 
     // min and max value for the client to find
