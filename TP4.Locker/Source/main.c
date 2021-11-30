@@ -7,9 +7,14 @@
 #include <fcntl.h>
 
 int main(int argc, char* argv[]) {
-    for  (;;) { /* Prompt for  locking command  and  carry it out */
+        if (argc != 2) {
+            fprintf(stderr, "Not enough arguments: Should be './locker filename'\n");
+            exit(EXIT_FAILURE);
+        }
+
         struct flock fl;
 
+        // variables
         int cmd, start, length;
         char input[20];
         char input_cmd;
@@ -18,12 +23,16 @@ int main(int argc, char* argv[]) {
         char* EXIT_PROG = "exit\n";
         char* HELP = "?\n";
 
+        //opening file and testing if there's a problem
         int fd = open(argv[1], O_RDWR);
         if (fd < 0) {
             fprintf(stderr, "Couldn't open file %s: %s\n", argv[1], strerror(errno));
             exit(EXIT_FAILURE);
         }
 
+    for  (;;) { /* Prompt for  locking command  and  carry it out */
+
+        // GUI
         printf("Enter ? for help\n");
         printf("PID=%ld> ", (long)  getpid());
         fflush(stdout);
@@ -31,6 +40,7 @@ int main(int argc, char* argv[]) {
         // gets input from standard input
         fgets(input, sizeof(input), stdin);
 
+        // help gui
         if (strcmp(input, HELP) == 0) {
             printf("\n");
             printf("    Format: cmd l_type start length [whence(optional)]\n");
