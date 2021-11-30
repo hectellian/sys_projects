@@ -39,4 +39,4 @@ Pour errno jai choisi de tester sur `EACESS` et `EAGAIN`.
 
 ## Results
 
-En testant le programme on peut voir que on peut poser les lock que l'on veut sur un processus mais du moment ou on va vouloir y acceder ou en poser en plus par un autre processus on va commencer a avoir des erreur. Si on test avec un lock exclusif on aura un erreur d'acces si un autre precessus essaie de recuprer ou poser un lock en plus. Dans le cas d'un lock partager on peut toujours en poser/recuperer des lock du meme type mais au moment ou l'on met un lock exclusif plus aucun processus ne peut acceder au fichier.
+En testant le programme on peut voir que on peut poser les lock que l'on veut sur un fichier mais du moment ou on va vouloir y acceder ou en poser en plus par un autre processus on va commencer a avoir des erreur. Si on test avec un lock exclusif on aura un erreur d'acces si un autre precessus essaie de recuprer ou poser un lock en plus. Dans le cas d'un lock partager on peut toujours en poser/recuperer des lock du meme type mais au moment ou l'on met un lock exclusif plus aucun processus ne peut acceder au fichier.
