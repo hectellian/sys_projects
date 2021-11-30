@@ -76,3 +76,19 @@ Tout comme avec le serveur on va tester chaque retour de fonction et afficher de
 On recois alors notre premiere communication, les fameux `min` et `max` grace a `read`. On rentre alors dans une loop `for(;;)` et le jeu commence:
 
 > Le client va demander a l'utilisateur d'entrer une valeur entre le `min` et le `max` et ensuite la transmettre au serveur qui lui va la tester. Le client recois alors une commande `cmd` et va donc effectuer une action selon la commande recue. Le client affichera toute les informations recu pour que l'utilisateur puisse en faire ce qu'il veut. Enfin dans le cas de perte ou reussite, le client se ferme.
+
+## Fonctionnement
+
+L'utilisation du code est assez simple, en effet il suffit de lancer le programme suivie de certains arguments. Par exemple pour le serveur:
+
+```bash
+./server port_number
+```
+> Sachant que le port est compris entre 1024 et 65535 car les port plus bas sont reserve pour d'autres utilisations
+
+Pour le client on aura une forme tres similaire:
+
+```bash
+./client ip_number port_number
+```
+> On va utiliser le meme port que celui choisit pour le serveur sinon la connectino ne sera jamais possible. Pour l'ip par contre, on va utliser `127.0.0.1` puisque on se connecte en `localhost`.
