@@ -29,7 +29,7 @@ void cd(char* path) {
     } else {
         int rst = chdir(path);
         if (rst == -1) {
-            fprintf(stderr, "hecteshell: cd: %s: %s\n", path, strerror(errno));
+            fprintf(stderr, "%sshell: cd: %s: %s\n", getenv("USER"), path, strerror(errno));
         }
     }
 }
@@ -41,7 +41,7 @@ void cd(char* path) {
 void hexit(void) {
     int pid = getpid();
     printf("Exited %s shell\n", getenv("USER"));
-    kill(pid, SIGKILL);
+    kill(pid, SIGHUP);
 }
 
 /**

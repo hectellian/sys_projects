@@ -28,8 +28,12 @@ int main(int argc, char* argv[], char* env[]) {
     }
 
     while (1) { // Infinite loop
-        //Important variables
+        // Set all the important mask for the signals
+        set_handlers();
+        
+        // ! Important variables
         int _argc;
+        extern pid_t foreground_job, background_job; // fjob and bjob from jobs.c
 
         // GUI
         printGUI();
@@ -46,16 +50,34 @@ int main(int argc, char* argv[], char* env[]) {
             if (exc == -1) { // Checking if it's not a bin function
                 pid_t pid = fork(); // New process
                 if (pid > 0) { // Parent
-                    int status = 0;
                     // TODO Handle Signals
                     if (checkBackground(_argc, _argv) != 1) { // Checks if it's not a bg job
-                        waitpid(pid, &status, WUNTRACED);
-                    // TODO Handle background/foreground tasks
+                        foreground_job = pid;
+                        int status;
+                        int stat = waitpid(pid, &status, 0);
+                        if (stat > 0) {
+                            if (WIFSIGNALED(status)) {
+                                printf("Foreground job interupted by signal\n");
+                            }
+                            printf("Foreground job exited with code %d\n", status);
+                            foreground_job = 0;
+                        } else if (stat == -1) {
+                            printf("Something wrong happened (see code %d)\n", status);
+                        }
+                    } else if (checkBackground(_argc, _argv) == 1) {
+                        background_job = pid;
                     }
                 } else if (pid == 0) {
+                    if (checkBackground(_argc, _argv) == 1) {
+                        _argv[strcspn(_argv[_argc - 1], "&")] = 0;
+                        // TODO Execute job in background (&)
+                    }
                     int exe = execvp(_argv[0], _argv);
                     if ( exe == -1) {
-                        fprintf(stderr, "Command %s not found: %s\n", _argv[0], strerror(errno));
+                        fprintf(stderr, "%sshell: %s: command not found\n", getenv("USER"), _argv[0]);
+                        exit(EXIT_FAILURE);
+                    } else {
+                        exit(EXIT_SUCCESS);
                     }
                 } else {
                     fprintf(stderr, "Couldn't execute processus");
