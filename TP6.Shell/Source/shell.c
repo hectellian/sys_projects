@@ -31,7 +31,7 @@ int main(int argc, char* argv[], char* env[]) {
         // Set all the important mask for the signals
         set_handlers();
         
-        // ! Important variables
+        //Important variables
         int _argc;
         extern pid_t foreground_job, background_job; // fjob and bjob from jobs.c
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[], char* env[]) {
             if (exc == -1) { // Checking if it's not a bin function
                 pid_t pid = fork(); // New process
                 if (pid > 0) { // Parent
-                    // TODO Handle Signals
+                    // TODO Handle Signals (better)
                     if (checkBackground(_argc, _argv) != 1) { // Checks if it's not a bg job
                         foreground_job = pid;
                         int status;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[], char* env[]) {
                 } else if (pid == 0) {
                     if (checkBackground(_argc, _argv) == 1) {
                         _argv[strcspn(_argv[_argc - 1], "&")] = 0;
-                        // TODO Execute job in background (&)
+                        // ! Doesn't execute anything
                     }
                     int exe = execvp(_argv[0], _argv);
                     if ( exe == -1) {
