@@ -47,7 +47,6 @@ void handler(int signum) {
         if (foreground_job > 0) {
             kill(foreground_job, SIGINT);
         }
-        write(STDOUT_FILENO, "\n", 2);
         break;
     
     case SIGHUP: // Redirects the signal to everything
@@ -84,22 +83,18 @@ void child_process_signal(int signum, siginfo_t *siginfo, void* unused) {
 void set_handlers(void) {
     // SIGCHILD handler
     struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
     sa.sa_sigaction = child_process_signal;
     sa.sa_flags = SA_SIGINFO;
     sigaction(SIGCHLD, &sa, NULL);
 
     // SIGINT and SIGUHP
     struct sigaction sig;
+    memset(&sig, 0, sizeof(sig));
     sig.sa_handler = handler;
     sig.sa_flags = SA_RESTART;
     sigaction(SIGINT, &sig, NULL);
     sigaction(SIGHUP, &sig, NULL);
-
-    // Not stopping background task with Ctrl+C
-    sigset_t back_mask;
-    sigemptyset(&back_mask);
-    sigaddset(&back_mask, SIGINT);
-    sigprocmask(SIG_BLOCK, &back_mask, NULL);
 
     // Ignore SIGTERM and SIGQUIT
     sigset_t pmask;

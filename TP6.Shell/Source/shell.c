@@ -11,9 +11,9 @@
  */
 #include <stdlib.h>
 #include <unistd.h>
-#include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/fcntl.h>
@@ -48,9 +48,9 @@ int main(int argc, char* argv[], char* env[]) {
         else {
             int exc = execbin(_argc, _argv);
             if (exc == -1) { // Checking if it's not a bin function
+
                 pid_t pid = fork(); // New process
                 if (pid > 0) { // Parent
-                    // TODO Handle Signals (better)
                     if (checkBackground(_argc, _argv) != 1) { // Checks if it's not a bg job
                         foreground_job = pid;
                         int status;
@@ -69,8 +69,21 @@ int main(int argc, char* argv[], char* env[]) {
                     }
                 } else if (pid == 0) {
                     if (checkBackground(_argc, _argv) == 1) {
-                        _argv[strcspn(_argv[_argc - 1], "&")] = 0;
-                        // ! Doesn't execute anything
+                        // Remove '&'
+                        _argv[_argc - 1] = NULL;
+
+                        // Redirect output to null
+                        int fdout = open("/dev/null", O_RDWR);
+                        int fdo = dup2(fdout, STDIN_FILENO);
+                        printf("%d", fdo);
+                        close(fdout);
+
+                        // Not stopping background task with Ctrl+C
+                        sigset_t back_mask;
+                        sigemptyset(&back_mask);
+                        sigaddset(&back_mask, SIGINT);
+                        sigprocmask(SIG_BLOCK, &back_mask, NULL);
+
                     }
                     int exe = execvp(_argv[0], _argv);
                     if ( exe == -1) {
