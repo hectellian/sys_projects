@@ -40,20 +40,20 @@ int checkBackground(int _argc, char* _argv[]) {
  * 
  * @param signum SIGINT or SIGHUP, the rest is ignored
  */
-void handler(int signum) {
-    switch (signum)
+void handler(int sig) {
+    switch (sig)
     {
     case SIGINT: //< Redirects the signal to the principal job
         if (foreground_job > 0) {
-            kill(foreground_job, SIGINT);
+            kill(foreground_job, SIGINT); // Sends SIGINT signal to foreground pid
         }
         break;
     
     case SIGHUP: // Redirects the signal to everything
         if (foreground_job > 0) {
-            kill(foreground_job, SIGHUP);
+            kill(foreground_job, SIGHUP);// Sends SIGHUP signal to foreground pid
         } if (background_job > 0) {
-            kill(background_job, SIGHUP);
+            kill(background_job, SIGHUP); // Sends SIGHUP signal to backgorun pid
         }
         exit(EXIT_SUCCESS);
         break;
@@ -71,7 +71,7 @@ void child_process_signal(int signum, siginfo_t *siginfo, void* unused) {
     if (siginfo->si_pid == background_job) {
         int status;
         waitpid(siginfo->si_pid, &status, 0);
-        write(STDOUT_FILENO, "\nBackground Job Exited with Success\n", 36);
+        write(STDOUT_FILENO, "\nBackground Job Exited with Success\n", 36); // Using write because of redirected output
         background_job = 0;
     }
 }
