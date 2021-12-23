@@ -9,7 +9,7 @@
 #include <errno.h>
 #include "backup.h"
 
-void copy(const char* src, const char* destination) {
+void copy(const char* src[], size_t len, const char* destination, unsigned int flags) {
     int src_fd, destination_fd;
     char buf[4096];
     ssize_t nbBytes;
@@ -31,9 +31,10 @@ void copy(const char* src, const char* destination) {
         close(src_fd);
         close(destination_fd);
         return;
-    } 
+    }  
+}
 
-    
+void cwrapper(const char *in, const char *out, const struct *in_sb) {
     
 }
 
