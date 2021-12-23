@@ -30,6 +30,7 @@ int main(int argc, char * argv[]) {
             //adds a space everytime
             strcat(str, " ");
         }
+        str[strlen(str) - 1] = '\0';
         EVP_String(str, options.hashname);
     }
 

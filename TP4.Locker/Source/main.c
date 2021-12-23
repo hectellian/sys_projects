@@ -108,22 +108,21 @@ int main(int argc, char* argv[]) {
             if  (status == 0 ) {
     // process results and  print informative  text
                 if (fl.l_type == F_UNLCK) {
-                    printf("[PID=%ld] got lock\n", (long)  getpid());
+                    printf("[PID=%ld] got lock, unlocked\n", (long)  getpid());
                 }
                 else {
                     switch(fl.l_type) {
                         case F_RDLCK:
-                            printf("[PID=%ld] Denied by READ lock on %lu:%lu (held by PID %d)\n", (long)  getpid(), fl.l_start, fl.l_len, fl.l_pid);
+                            printf("[PID=%ld] READ lock on %lu:%lu (held by PID %d)\n", (long)  getpid(), fl.l_start, fl.l_len, fl.l_pid);
                             break;
                         case F_WRLCK:
-                            printf("[PID=%ld] Denied by WRITE lock on %lu:%lu (held by PID %d)\n", (long)  getpid(), fl.l_start, fl.l_len, fl.l_pid);
+                            printf("[PID=%ld] WRITE lock on %lu:%lu (held by PID %d)\n", (long)  getpid(), fl.l_start, fl.l_len, fl.l_pid);
                             break;
                     }
                 }
             } else if (errno == EINVAL) {
     // process results and  print informative  text
                 fprintf(stderr, "Cannot get lock: %s\n", strerror(errno));
-                exit(EXIT_FAILURE);
             }
         } else { /* F_SETLK,  F_SETLKW  */
     // check status and handle  errors  (look  at manual  for  possible errors)
@@ -137,7 +136,14 @@ int main(int argc, char* argv[]) {
                 }
             } else if (errno == EACCES || errno == EAGAIN) {
                 fprintf(stderr, "Couldn't access lock: %s\n", strerror(errno));
-                exit(EXIT_FAILURE);
+                switch(fl.l_type) {
+                        case F_RDLCK:
+                            printf("[PID=%ld] Denied by READ lock on %lu:%lu (held by PID %d)\n", (long)  getpid(), fl.l_start, fl.l_len, fl.l_pid);
+                            break;
+                        case F_WRLCK:
+                            printf("[PID=%ld] Denied by WRITE lock on %lu:%lu (held by PID %d)\n", (long)  getpid(), fl.l_start, fl.l_len, fl.l_pid);
+                            break;
+                    }
             }
         } 
     }

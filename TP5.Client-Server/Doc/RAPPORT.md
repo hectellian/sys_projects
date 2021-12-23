@@ -92,3 +92,9 @@ Pour le client on aura une forme tres similaire:
 ./client ip_number port_number
 ```
 > On va utiliser le meme port que celui choisit pour le serveur sinon la connectino ne sera jamais possible. Pour l'ip par contre, on va utliser `127.0.0.1` puisque on se connecte en `localhost`.
+
+@startuml
+Server -[#red]> Client : Init values [min, max]
+Client -[#0000FF]->Server : User Guess
+Server -[#red]> Client : [cmd]
+@enduml

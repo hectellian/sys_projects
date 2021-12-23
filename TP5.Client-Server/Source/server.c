@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
         pid_t pid = fork();
         if (pid > 0) { // Parents PID
             // Parents code
-            waitpid(pid, NULL, 0); // Kill child :)
+            waitpid(pid, NULL, 0); // wait for child to end himself
         } else if (pid == 0) { // Child's PID
             // Child's code
             // We don't want any zombie process so we make a new process
