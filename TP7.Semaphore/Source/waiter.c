@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     if (smh == MAP_FAILED)
         fprintf(stderr, "Couldn't map memory: %s\n", strerror(errno));
 
-    while (condition == 0) {
+    do {
         sem_wait(serve);
         sleep(rand()%2+1); // one pizza every 1 or 2 seconds
 
@@ -71,11 +71,7 @@ int main(int argc, char *argv[]) {
 
         sem_getvalue(done, &condition);
 
-        // waiting if there's nothing on the shelve
-        if (*smh == 0)
-            printf("Shelve is empty, waiting for pizza...\n");
-
-    }
+    } while (condition == 0 || *smh != 0);
 
     // Closing everything thats open
     sem_close(cook);

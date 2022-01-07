@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
 
         // decrement value of the quantity
         quantity--;
-        printf("There's %d pizza left to cook", quantity);
+        printf("There's %d pizza left to cook\n", quantity);
 
         if (*smh == 3)
             printf("Shelve is full, taking a break...\n");
