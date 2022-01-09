@@ -19,12 +19,12 @@ void EVP_String(char *message, const char *digestname) {
         printf("Unknown message digest %s\n", digestname);
         exit(EXIT_FAILURE);
     } else {
-        mdctx = EVP_MD_CTX_new();
-        EVP_DigestInit_ex(mdctx, md, NULL); //Init the "box"
+        mdctx = EVP_MD_CTX_new(); //Init the "box"
+        EVP_DigestInit_ex(mdctx, md, NULL); // Init the digest
         
-        EVP_DigestUpdate(mdctx, message, strlen(message)); //Adds message in the "box"
+        EVP_DigestUpdate(mdctx, message, strlen(message)); //Add and Hash message in the "box"
 
-        EVP_DigestFinal_ex(mdctx, md_value, &md_len); //calculates hash
+        EVP_DigestFinal_ex(mdctx, md_value, &md_len);
         EVP_MD_CTX_free(mdctx); //free memory
 
         for (i = 0; i < md_len; i++) //prints hash
