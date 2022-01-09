@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
      // Seting up semaphores
     sem_t *serve = sem_open(SERVE, O_CREAT, 0666, 0);
     sem_t *cook = sem_open(COOK, O_CREAT, 0666, 3); // max nb on shelve
-    sem_t *mutex = sem_open(MUTEX, O_CREAT, 0666, 1); // course condition
+    sem_t *mutex = sem_open(MUTEX, O_CREAT, 0666, 1); // mutual exclusion
     sem_t *done = sem_open(DONE, O_CREAT, 0666, 0);
 
     // Shared memory
@@ -48,12 +48,16 @@ int main(int argc, char *argv[]) {
     if (ftruncate(fd, sizeof(int)) == -1)
         fprintf(stderr, "Couldn't modify size of memory: %s\n", strerror(errno));
 
-    // File mapping
+    // File mapping, init to 0
     int *smh = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (smh == MAP_FAILED)
         fprintf(stderr, "Couldn't map memory: %s\n", strerror(errno));
 
     do {
+
+        if (*smh == 0)
+            printf("Waiting for cook to start the pizza...\n");
+
         sem_wait(serve);
         sleep(rand()%2+1); // one pizza every 1 or 2 seconds
 
