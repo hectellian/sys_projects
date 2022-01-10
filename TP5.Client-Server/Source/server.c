@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <netinet/in.h> // inet_ntoa
 #include <netinet/ip.h>
-#include <arpa/inet.h>
+#include <arpa/inet.h> // inet
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
@@ -67,9 +67,9 @@ int main(int argc, char* argv[]) {
     }
 
     // Printing port
-    printf("Server %s Listening on port: %d\n", inet_ntoa(address.sin_addr), port);
+    printf("Server %s Listening on port: %d\n", inet_ntoa(address.sin_addr), port); // inet_ntoa -> byte to ipv4 string
 
-    // Listening to a maximum of 5 interfaces
+    // Listening to a maximum of 4 interfaces
     int queue = 4;
     int l_status = listen(serverSocket, queue); // Passive mode socket
     if (l_status == -1) { // Checking if there's any problem
@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
                 unsigned char random_value = random_number(min, max);
                 printf("Random value generated for client %d: %u\n", clientSocket, random_value);
 
-            unsigned char tries = 0;
+                unsigned char tries = 0;
                 unsigned char left = MAX_TRIES;
                 unsigned char cmd;
                 for (;;) { // Checking for clients guesses
