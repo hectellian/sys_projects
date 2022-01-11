@@ -25,7 +25,9 @@
  */
 void cd(char* path) {
     if (path == NULL) {
-        chdir("/home/hectellian");
+        char home[256] = "/home/";
+        strcat(home, getenv("USER"));
+        chdir(home);
     } else {
         int rst = chdir(path);
         if (rst == -1) {
