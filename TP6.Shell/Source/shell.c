@@ -1,4 +1,3 @@
-#include <stdio.h>
 /**
  * @file shell.c
  * @author Anthony Christoforou (github.com/hectellian)
@@ -9,6 +8,7 @@
  * @copyright Copyright (c) 2021
  * 
  */
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
