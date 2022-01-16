@@ -43,3 +43,26 @@ Ce module va s'occuper de verifier les options entree par l'user. On utilise `ge
 ## Main
 
 Dans la fonction main, on va commencer par initialiser nos valeurs par default de notre structure `Options` par `{0, sha1}`. On appel `check_options` pour savoir sur quoi on va devoir operer. Finalement on a une boucle for si `is_file` est vrai au cas ou on aurait plusieurs nom de fichiers. Dans le cas ou c'est un String on va creer un buffer qui va recuperer chaque string pour en faire une phrase en ajoutant des espaces entre chaques mots.
+
+# Utilisation
+
+Pour utiliser ce script il suffit de faire:
+
+```bash
+make
+```
+> Raccourci de `make all` : va permettre de compiler tout en liant les modules
+
+## Fichiers:
+
+```bash
+./digest -f file1 file2 ...
+```
+> Grace a l'option `-f` le programme va reconnaitre les arguments comme des fichiers
+
+## String:
+
+```bash
+./digest this is text
+```
+> Le script va hasher directement "this is text"

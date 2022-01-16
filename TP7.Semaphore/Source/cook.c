@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
     // Seting up semaphores
     sem_t *serve = sem_open(SERVE, O_CREAT, 0666, 0);
-    sem_t *cook = sem_open(COOK, O_CREAT, 0666, 3); // max nb on shelve
+    sem_t *cook = sem_open(COOK, O_CREAT, 0666, 3); // max nb of pizzas on shelve, until then cook
     sem_t *mutex = sem_open(MUTEX, O_CREAT, 0666, 1); // mutual exclusion
     sem_t *done = sem_open(DONE, O_CREAT, 0666, 0);
 

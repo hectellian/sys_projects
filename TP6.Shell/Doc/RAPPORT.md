@@ -3,6 +3,8 @@ ANTHONY
 
 # RAPPORT 
 
+Dans ce TP, on cherchait a creer un shell fonctionnel comme celui que l'on peut trouver sur toute les distribution linux, par exemple: bash, zsh, ...
+L'idee etait de creer plusieurs modules qui s'occupent des commandes `builtin`, un autre pour le **parsing**, un pour les jobs en fond et enfin une fonction principale qui s'occupe de gerer le reste.
 ## Parsing
 
 Ce module consiste a faire 3 choses. Il va s'occuper principalement de gerer l'input de l'utilisateur, et aussi afficher le `GUI` (interface) du shell.
